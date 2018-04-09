@@ -13,19 +13,12 @@ export default class MentionsTextInput extends Component {
   constructor() {
     super();
     this.state = {
-      textInputHeight: "",
       isTrackingStarted: false,
       suggestionRowHeight: new Animated.Value(0),
 
     }
     this.isTrackingStarted = false;
     this.previousChar = " ";
-  }
-
-  componentWillMount() {
-    this.setState({
-      textInputHeight: this.props.textInputMinHeight
-    })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -100,7 +93,6 @@ export default class MentionsTextInput extends Component {
   resetTextbox() {
     this.previousChar = " ";
     this.stopTracking();
-    this.setState({ textInputHeight: this.props.textInputMinHeight });
   }
 
   render() {
@@ -119,16 +111,10 @@ export default class MentionsTextInput extends Component {
         </Animated.View>
         <TextInput
           {...this.props}
-          onContentSizeChange={(event) => {
-            this.setState({
-              textInputHeight: this.props.textInputMinHeight >= event.nativeEvent.contentSize.height ? this.props.textInputMinHeight : event.nativeEvent.contentSize.height + 10,
-            });
-          }}
           ref={component => this._textInput = component}
           onChangeText={this.onChangeText.bind(this)}
-          multiline={true}
           value={this.props.value}
-          style={[{ ...this.props.textInputStyle }, { height: Math.min(this.props.textInputMaxHeight, this.state.textInputHeight) }]}
+          style={[{ ...this.props.textInputStyle }]}
           placeholder={this.props.placeholder ? this.props.placeholder : 'Write a comment...'}
         />
       </View>
@@ -143,8 +129,6 @@ MentionsTextInput.propTypes = {
     PropTypes.func,
     PropTypes.element,
   ]),
-  textInputMinHeight: PropTypes.number,
-  textInputMaxHeight: PropTypes.number,
   trigger: PropTypes.string.isRequired,
   triggerLocation: PropTypes.oneOf(['new-word-only', 'anywhere']).isRequired,
   value: PropTypes.string.isRequired,
@@ -158,8 +142,8 @@ MentionsTextInput.propTypes = {
   keyExtractor: PropTypes.func.isRequired,
   horizontal: PropTypes.bool,
   suggestionRowHeight: PropTypes.number.isRequired,
-  MaxVisibleRowCount: function(props, propName, componentName) {
-    if(!props.horizontal && !props.MaxVisibleRowCount) {
+  MaxVisibleRowCount: function (props, propName, componentName) {
+    if (!props.horizontal && !props.MaxVisibleRowCount) {
       return new Error(
         `Prop 'MaxVisibleRowCount' is required if horizontal is set to false.`
       );
@@ -171,7 +155,5 @@ MentionsTextInput.defaultProps = {
   textInputStyle: { borderColor: '#ebebeb', borderWidth: 1, fontSize: 15 },
   suggestionsPanelStyle: { backgroundColor: 'rgba(100,100,100,0.1)' },
   loadingComponent: () => <Text>Loading...</Text>,
-  textInputMinHeight: 30,
-  textInputMaxHeight: 80,
   horizontal: true,
 }
