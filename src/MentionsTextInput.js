@@ -5,9 +5,24 @@ import {
   Animated,
   TextInput,
   FlatList,
-  ViewPropTypes
+  ViewPropTypes,
+  StyleSheet,
 } from 'react-native';
 import PropTypes from 'prop-types';
+
+const styles = StyleSheet.create({
+  wrap: {
+    flexGrow: 1,
+  },
+  textInput: {
+    borderColor: '#ebebeb',
+    borderWidth: 1,
+    fontSize: 15,
+  },
+  suggestionsPanel: {
+    backgroundColor: 'rgba(100,100,100,0.1)',
+  },
+});
 
 export default class MentionsTextInput extends Component {
   constructor() {
@@ -97,7 +112,7 @@ export default class MentionsTextInput extends Component {
 
   render() {
     return (
-      <View>
+      <View style={this.props.wrapStyle}>
         <Animated.View style={[{ ...this.props.suggestionsPanelStyle }, { height: this.state.suggestionRowHeight }]}>
           <FlatList
             keyboardShouldPersistTaps={"always"}
@@ -114,7 +129,7 @@ export default class MentionsTextInput extends Component {
           ref={component => this._textInput = component}
           onChangeText={this.onChangeText.bind(this)}
           value={this.props.value}
-          style={[{ ...this.props.textInputStyle }]}
+          style={this.props.textInputStyle}
           placeholder={this.props.placeholder ? this.props.placeholder : 'Write a comment...'}
         />
       </View>
@@ -123,8 +138,6 @@ export default class MentionsTextInput extends Component {
 }
 
 MentionsTextInput.propTypes = {
-  textInputStyle: TextInput.propTypes.style,
-  suggestionsPanelStyle: ViewPropTypes.style,
   loadingComponent: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.element,
@@ -152,8 +165,9 @@ MentionsTextInput.propTypes = {
 };
 
 MentionsTextInput.defaultProps = {
-  textInputStyle: { borderColor: '#ebebeb', borderWidth: 1, fontSize: 15 },
-  suggestionsPanelStyle: { backgroundColor: 'rgba(100,100,100,0.1)' },
+  wrapStyle: styles.wrap,
+  textInputStyle: styles.textInput,
+  suggestionsPanelStyle: styles.suggestionsPanel,
   loadingComponent: () => <Text>Loading...</Text>,
   horizontal: true,
 }
